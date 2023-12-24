@@ -108,14 +108,13 @@ function useProtectedRoute(session: Session) {
   const segments = useSegments();
 
   useEffect(() => {
-    const inAuthGroup = segments[0] === "(auth)";
-    
-    if (!session && !inAuthGroup) {
+    // const inAuthGroup = segments[0] === "(auth)";
+    if (!session) {
       router.replace("/");
-    } else if (session && inAuthGroup) {
+    } else if (session) {
       router.replace("/(tabs)");
     }
-  }, [session, segments]);
+  }, [session]);
 }
 
 type AuthProviderProps = {
@@ -244,18 +243,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   }
 
-  const fetchUserData = async (user: FirebaseAuthUser) => {
-    const docRef = doc(db, "users", user.uid);
-    const docSnap = await getDoc(docRef);
 
-    if (docSnap.exists()) {
-      setUser(docSnap);
-      router.push("/(tabs)");
-      return docSnap.data();
-    } else {
-      router.push("/(auth)/");
-    }
-  };
 
   const signin = async (email: string, password: string) => {
     try {

@@ -1,18 +1,40 @@
 import { View, Text, Image, ScrollView } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome } from "@expo/vector-icons";
 import { city } from "../../utils";
+import { useAuth } from "../../context/AuthContext";
+import { User } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase";
+import UserAvatar from "react-native-user-avatar";
 
 const ticket = () => {
+  const [data, setData] = useState<any>(null);
+  const { userData } = useAuth();
+  console.log(data?.data(), "data");
+
+  const fetchUserData = async (user: User) => {
+    const docRef = doc(db, "users", user.uid);
+    const docSnap = await getDoc(docRef);
+    setData(docSnap);
+  };
+
+  useEffect(() => {
+    const user = auth.currentUser;
+    if (user) {
+      fetchUserData(user);
+    }
+  }, []);
   return (
     <SafeAreaView className="flex-1 min-h-screen px-[16px]">
       <View className="flex-row items-center space-x-4">
-        <Image
-          source={{
-            uri: "https://gateway.pinata.cloud/ipfs/QmevqC9pXa1K31SR5TgD3iK4iq7a1sLHgdhq6HDKjuYWmY",
+        <UserAvatar
+          size={50}
+          name="Avishay Bar"
+          textStyle={{
+            fontSize: 10,
           }}
-          className="w-[50px] h-[50px] rounded-full"
         />
         <Text className="text-[24px] font-bold text-[#fff]">Discover</Text>
       </View>
