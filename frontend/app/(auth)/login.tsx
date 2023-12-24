@@ -42,11 +42,10 @@ const LogIn = () => {
   const { signin } = useAuth();
 
   const handleSubmit = async () => {
-    // const tx = await signin(email, password);
-    // if (tx) {
-    //   router.push("/(tabs)");
-    // }
-    router.push("/(tabs)")
+    const tx = await signin(email, password);
+    if (tx) {
+      router.push("/(tabs)");
+    }
   };
   return (
     <View className="flex-1">

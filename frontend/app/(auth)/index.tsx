@@ -9,7 +9,7 @@ import React, { useState } from "react";
 import { StatusBar } from "expo-status-bar";
 import { useAuth } from "../../context/AuthContext";
 import { FontAwesome } from "@expo/vector-icons";
-import { permanentlyDeleteAccount } from "@rly-network/mobile-sdk";
+import { router } from "expo-router";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -39,10 +39,14 @@ const SignUp = () => {
     setPasswordStrength(checkPasswordStrength(text));
   };
 
-  const { createAnEOA } = useAuth();
+  const { createAnEOA, action } = useAuth();
 
   const handleSubmit = async () => {
     const tx = await createAnEOA(email, password);
+    console.log("txx", tx);
+    if (tx) {
+      router.push("/(tabs)/");
+    }
   };
   return (
     <View className="flex-1">
@@ -91,7 +95,7 @@ const SignUp = () => {
           >
             <TextInput
               secureTextEntry={!passwordVisible}
-              placeholder="johndoe@gmail.com"
+              placeholder="**********"
               style={{ flex: 1 }}
               placeholderTextColor="#000"
               value={password}
@@ -114,7 +118,7 @@ const SignUp = () => {
             className="bg-[#4169E1] rounded-lg py-[16px] mt-[10px] items-center justify-center w-[90%]"
           >
             <Text className="text-[16px]  font-opensans-bold text-[#fff]">
-              Create Account
+              {action ? action : "Create Account"}
             </Text>
           </TouchableOpacity>
         </View>

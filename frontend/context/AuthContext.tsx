@@ -57,7 +57,7 @@ type AuthContextValue = {
   pauseSound(): Promise<void>;
   isPlaying: boolean;
   userData: QueryDocumentSnapshot<DocumentData, DocumentData> | undefined;
-  // Add other values you want to provide through the context here
+  action: string;
 };
 
 const AuthContext = React.createContext<AuthContextValue>({
@@ -97,6 +97,7 @@ const AuthContext = React.createContext<AuthContextValue>({
   },
   isPlaying: false,
   userData: undefined,
+  action: "",
 });
 
 export function useAuth() {
@@ -108,6 +109,7 @@ function useProtectedRoute(session: Session) {
 
   useEffect(() => {
     const inAuthGroup = segments[0] === "(auth)";
+    
     if (!session && !inAuthGroup) {
       router.replace("/");
     } else if (session && inAuthGroup) {
@@ -134,12 +136,14 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [userData, setUser] =
     useState<QueryDocumentSnapshot<DocumentData, DocumentData>>();
   console.log("user", userData);
-  // useProtectedRoute(userData);
+  const [action, setAction] = useState("");
+  useProtectedRoute(userData?.id);
 
   const createAnEOA = async (email: string, password: string) => {
     let userCredential, newAccount;
 
     try {
+      setAction("Signing User....");
       // Create a new user with email and password
       userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -155,11 +159,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     if (user) {
       try {
+        setAction("Creating Wallet....");
         newAccount = await createAccount({
           storageOptions: {
             saveToCloud: false,
-            rejectOnCloudSaveFailure: false,
+            rejectOnCloudSaveFailure: true,
           },
+          overwrite: true,
         });
       } catch (error) {
         console.error("Error creating account: ", error);
@@ -168,6 +174,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
       if (newAccount) {
         try {
+          setAction("Storing your info.....");
           // Store the user's email and wallet address in Firestore
           const docSnap = await setDoc(doc(db, "users", user.uid), {
             email: email,
@@ -182,6 +189,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
 
     console.log("User registered successfully");
+    setAction("Account created Sucessfully 😁");
     return true;
   };
 
@@ -257,12 +265,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         password
       );
       const user = userCredential.user;
-
-      if (user) {
-        return fetchUserData(user);
-      } else {
-        router.push("/signup");
-      }
+      return user;
     } catch (error) {
       console.error("Error signing in: ", error);
     }
@@ -280,6 +283,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     pauseSound,
     signin,
     userData,
+    action,
   };
 
   return (

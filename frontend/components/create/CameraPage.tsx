@@ -127,6 +127,7 @@ const CameraPage = ({ setActiveUrl, activeUrl }: Props) => {
             width: 400,
           }}
         />
+        
       </>
     );
   }
@@ -146,8 +147,8 @@ const CameraPage = ({ setActiveUrl, activeUrl }: Props) => {
           color={"#fff"}
         />
 
-        <TouchableOpacity className="bg-blue-600 px-9 py-2.5 rounded-lg">
-          <Text className="text-[14px] text-[#fff] font-bold">Next</Text>
+        <TouchableOpacity className="px-9 py-2.5 rounded-lg">
+          <Text className="text-[14px] text-[#fff] font-opensans-bold">Next</Text>
         </TouchableOpacity>
       </SafeAreaView>
       <View className="flex-1 justify-end mb-9">
