@@ -31,6 +31,7 @@ const ArtistProfile = () => {
   const [artistprofile, setArtistProfile] = useState<ArtistProfile>();
   const [walletBalance, setwalletBalance] = useState("0");
   const [walletAddress, setWalletAddress] = useState("");
+  const [text, setText] = useState("Activate Account");
   const params = useLocalSearchParams();
   const { address } = params;
 
@@ -43,7 +44,13 @@ const ArtistProfile = () => {
 
   const handleActivateAccount = async () => {
     console.log("Activating account");
-    _createUser();
+    setText("Activating Account");
+    const bool: boolean = await _createUser();
+    if (bool) {
+      setText("Activated Account Success");
+    } else {
+      setText("Failed to Activate Account");
+    }
   };
   useEffect(() => {}, []);
 
@@ -122,9 +129,7 @@ const ArtistProfile = () => {
                 padding: 5,
               }}
             >
-              <Text style={{ color: "white", fontWeight: "500" }}>
-                Activate Account
-              </Text>
+              <Text style={{ color: "white", fontWeight: "500" }}>{text}</Text>
             </View>
           </TouchableOpacity>
           <View className="flex-row items-end justify-end flex-1 mx-auto">

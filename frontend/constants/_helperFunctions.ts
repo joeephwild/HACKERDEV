@@ -89,17 +89,17 @@ export const _listNFT = async ({
 export const _createUser = async (): Promise<boolean> => {
   try {
     const walletAddress: any = await _getWalletAddress();
-    const userTokenId: any = await userNFTContract.mint(walletAddress);
+    await userNFTContract.mint(walletAddress);
+    const userTokenId: any = await userNFTContract.getCurrentTokenId();
 
-    userTokenId.wait();
-    console.log(userTokenId);
-    // const tx = await filMediaMarketplaceContract.createUser(
-    //   userNFTAddress,
-    //   userTokenId
-    // );
-    // await tx.wait();
-    console.log("Transaction successful:", userTokenId.hash);
-
+    console.log(userTokenId.toString());
+    const tx = await filMediaMarketplaceContract.createUser(
+      userNFTAddress,
+      userTokenId
+    );
+    await tx.wait();
+    console.log("Transaction successful:", tx.hash);
+    AsyncStorage.setItem("tokenId", userTokenId);
     return true;
   } catch (error) {
     console.error("Error creating user NFT:", error);
