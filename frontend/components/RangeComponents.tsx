@@ -83,7 +83,7 @@ const RangeComponents = ({ nfts }: Props) => {
                     : "rgba(65, 105, 225, 0.40);",
                 paddingHorizontal: 14,
                 paddingVertical: 8,
-                borderRadius: 20,
+                borderRadius: 10,
                 color: "white",
                 overflow: "hidden",
               }}

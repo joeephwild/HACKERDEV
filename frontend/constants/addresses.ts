@@ -1,12 +1,13 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
-export const PROVIDER = "https://replicator-01.pegasus.lightlink.io/rpc/v1";
-export const artistNFTAddress = "0xE24962CA495b179056A465188Cac88E6572bA99a";
+export const PROVIDER =
+  "https://eth-sepolia.g.alchemy.com/v2/ZkFgCAUBdigtKoqowEjqdlyfjchhbvmg";
+export const artistNFTAddress = "0x162119d2237C60926D55DC1bA997025233CF7823";
 export const filMediaMarketplaceAddress =
-  "0xA9834D0BCe54b38F6d2bC58dB4916234718406D7";
-export const dynamicNftAddress = "0xf6eC93087E6C236665ECb28f27eDC3bF31DD4f37";
-export const userNFTAddress = "0x2F17366446b0509128CB6518D326C3707B80c2f0";
-export const artistFTAddress = "0xfb2f1068645105bbd4bff57723a5f6b3bf417a6f";
+  "0x8AcB75D06955Df7DF91BDf3113a7062F6e83324a";
+export const dynamicNftAddress = "0xb023d899938F8A45ba90A0a993D29fd516De10f6";
+export const userNFTAddress = "0xb5Fe96F6AFc0817729571407E2dd342f7e3A6905";
+export const nftAddress = "0xae912E61006a9D660929E8fD264EF6dC9577F258";
 
 export const client = new ApolloClient({
   cache: new InMemoryCache(),

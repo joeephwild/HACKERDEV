@@ -62,8 +62,8 @@ const AllAlbums = () => {
 
       <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 19 }}>
         {songs.map((item, index) => (
-          <View style={{ width: "50%" }}>
-            <AlbumCard key={index} {...item} />
+          <View key={index} style={{ width: "50%" }}>
+            <AlbumCard {...item} />
           </View>
         ))}
       </View>

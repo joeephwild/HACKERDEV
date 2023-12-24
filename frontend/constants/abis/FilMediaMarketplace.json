@@ -611,6 +611,25 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "addressUserOrArtist",
+        "type": "address"
+      }
+    ],
+    "name": "getUserOrArtistTokenId",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "user",
         "type": "uint256"
@@ -760,6 +779,25 @@
     "name": "subcribeToArtist",
     "outputs": [],
     "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "name": "tables",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {
