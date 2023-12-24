@@ -141,6 +141,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     try {
       // Create a new user with email and password
+      router.push("/(tabs)");
+
       userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -166,22 +168,24 @@ export function AuthProvider({ children }: AuthProviderProps) {
         return false;
       }
 
-      if (newAccount) {
-        try {
-          // Store the user's email and wallet address in Firestore
-          const docSnap = await setDoc(doc(db, "users", user.uid), {
-            email: email,
-            walletAddress: newAccount,
-          });
-          return true;
-        } catch (error) {
-          console.error("Error storing user data in Firestore: ", error);
-          return false;
-        }
-      }
+      // if (newAccount) {
+      //   try {
+      //     // Store the user's email and wallet address in Firestore
+      //     const docSnap = await setDoc(doc(db, "users", user.uid), {
+      //       email: email,
+      //       walletAddress: newAccount,
+      //     });
+      //     return true;
+      //   } catch (error) {
+      //     console.error("Error storing user data in Firestore: ", error);
+      //     return false;
+      //   }
+      // }
     }
 
     console.log("User registered successfully");
+    // router.push("/(tabs)");
+
     return true;
   };
 
