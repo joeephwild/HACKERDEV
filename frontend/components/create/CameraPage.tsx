@@ -8,13 +8,17 @@ import {
   Pressable,
   StyleSheet,
   Text,
+  TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ResizeMode, Video } from "expo-av";
 import * as ImagePicker from "expo-image-picker";
-// import { uploadFileToPinata } from "../../nftStorage";
+import { BottomSheetMethods } from "@devvie/bottom-sheet";
+import { Portal } from "@gorhom/portal";
+
+import PrivacySetting from "./PrivacySetting";
 
 type Props = {
   setActiveUrl: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -27,6 +31,19 @@ const CameraPage = ({ setActiveUrl, activeUrl }: Props) => {
   const [flashMode, setFlashMode] = useState<number | FlashMode>(FlashMode.on);
   const [zoom, setZoom] = useState(0);
   const cameraRef = useRef<Camera>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [value, setValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState("option1");
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+
+  const sheetRef = useRef<BottomSheetMethods>(null);
+
+  const togglePlay = () => {
+    setIsPlaying(!isPlaying);
+  };
 
   const [isRecording, setIsRecording] = useState(false);
 
@@ -110,7 +127,7 @@ const CameraPage = ({ setActiveUrl, activeUrl }: Props) => {
 
   if (!isRecording && activeUrl) {
     return (
-      <>
+      <View>
         <Video
           ref={videoRef}
           source={{
@@ -119,16 +136,38 @@ const CameraPage = ({ setActiveUrl, activeUrl }: Props) => {
           resizeMode={ResizeMode.COVER}
           isMuted={false}
           rate={1.0}
-          useNativeControls
           isLooping
-          shouldPlay
+          shouldPlay={isPlaying}
           style={{
             minHeight: "100%",
             width: 400,
           }}
         />
-        
-      </>
+        <View
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: [{ translateX: -12 }, { translateY: -12 }],
+          }}
+        >
+          <FontAwesome5
+            onPress={togglePlay}
+            name={isPlaying ? "pause" : "play"}
+            size={34}
+            color="#fff"
+          />
+        </View>
+        <Pressable
+          onPress={() => sheetRef?.current?.open()}
+          className="absolute bottom-[30px] right-0 bg-[#fff] p-[10px] rounded-full"
+        >
+          <FontAwesome5 name="arrow-right" size={24} color="#000" />
+        </Pressable>
+        <Portal>
+          <PrivacySetting sheetRef={sheetRef} />
+        </Portal>
+      </View>
     );
   }
 
@@ -148,7 +187,9 @@ const CameraPage = ({ setActiveUrl, activeUrl }: Props) => {
         />
 
         <TouchableOpacity className="px-9 py-2.5 rounded-lg">
-          <Text className="text-[14px] text-[#fff] font-opensans-bold">Next</Text>
+          <Text className="text-[14px] text-[#fff] font-opensans-bold">
+            Next
+          </Text>
         </TouchableOpacity>
       </SafeAreaView>
       <View className="flex-1 justify-end mb-9">

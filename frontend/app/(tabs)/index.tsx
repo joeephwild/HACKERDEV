@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   Image,
   Pressable,
@@ -6,7 +7,6 @@ import {
   TextInput,
   View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesome5 } from "@expo/vector-icons";
@@ -19,21 +19,26 @@ import { DocumentData, doc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { User as FirebaseAuthUser } from "firebase/auth";
 import UserAvatar from "react-native-user-avatar";
+import ShimmerPlaceHolder from "react-native-shimmer-placeholder";
+import AllNfts from "../../components/expolore/AllNfts";
 
 export default function TabOneScreen() {
   const [data, setData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { userData } = useAuth();
-  console.log(data?.data(), "data");
 
   const fetchUserData = async (user: FirebaseAuthUser) => {
+    setIsLoading(true);
     const docRef = doc(db, "users", user.uid);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       setData(docSnap);
       router.push("/(tabs)");
+      setIsLoading(false);
       return docSnap.data();
     } else {
       router.push("/(auth)/");
+      setIsLoading(false);
     }
   };
 
@@ -43,6 +48,7 @@ export default function TabOneScreen() {
       fetchUserData(user);
     }
   }, []);
+
   return (
     <SafeAreaView className="min-h-screen flex-1">
       <ScrollView
@@ -54,7 +60,6 @@ export default function TabOneScreen() {
         }}
       >
         {/** header view */}
-
         <View className="pb-[40px]">
           <View className="flex-row items-center p-3 justify-between">
             <View className="flex-row items-start space-x-4">
@@ -67,13 +72,23 @@ export default function TabOneScreen() {
                   }}
                 />
               </Pressable>
-              <View>
-                <Text className="text-[18px] font-semibold text-[#fff]">
-                  {data?.data()?.email.split("@")[0]}
-                </Text>
-                <Text className="text-[14px] text-[#DEDEDE] font-medium">
-                  {data?.data()?.email}
-                </Text>
+              <View className="space-y-1">
+                <ShimmerPlaceHolder
+                  visible={!isLoading}
+                  style={{ width: 200, height: 20 }}
+                >
+                  <Text className="text-[18px] font-semibold text-[#fff]">
+                    {data?.data()?.email.split("@")[0]}
+                  </Text>
+                </ShimmerPlaceHolder>
+                <ShimmerPlaceHolder
+                  visible={!isLoading}
+                  style={{ width: 200, height: 20 }}
+                >
+                  <Text className="text-[14px] text-[#DEDEDE] font-medium">
+                    {data?.data()?.email}
+                  </Text>
+                </ShimmerPlaceHolder>
               </View>
             </View>
             <View className="flex-row items-center space-x-5">
@@ -97,12 +112,12 @@ export default function TabOneScreen() {
             </View>
           </View>
         </View>
-
         {/* <CarouselCompoent /> */}
         <View className="space-y-[20px] flex-1 min-h-screen">
           <AllSongs />
           <AllAlbums />
           <AllArtist />
+          <AllNfts />
         </View>
       </ScrollView>
     </SafeAreaView>

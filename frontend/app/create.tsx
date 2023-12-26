@@ -16,6 +16,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import CameraPage from "../components/create/CameraPage";
 import ContentUpload from "../components/create/ContentUpload";
 import ImageUpload from "../components/create/ImageUpload";
+import LiveScreen from "../components/create/LiveScreen";
 
 export default function Create() {
   const [active, setActive] = useState("Shorts");
@@ -31,6 +32,8 @@ export default function Create() {
         return <ContentUpload />;
       case "Image":
         return <ImageUpload />;
+        case "Live":
+        return <LiveScreen setActiveUrl={setActiveUrl} activeUrl={activeUrl} />;
       default:
         break;
     }
