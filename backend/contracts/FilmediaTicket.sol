@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.19;
+pragma solidity 0.8.20;
 
 /**
  * @title Filmedia Ticket Contract
@@ -76,7 +76,7 @@ contract FilmediaTicket is ERC721, ERC721Enumerable, ERC721URIStorage, ERC721Bur
 // Function to purchase a ticket
 function purchaseTicket(uint256 ticketId, uint256 paymentAmount) external payable {
     require(tickets[ticketId].noOfTicket > 0, "Ticket is not available for sale");
-    require(paymentAmount >= ticketPrice, "Insufficient payment");
+    require(paymentAmount >= tickets[ticketId].ticketAmount, "Insufficient payment");
 
     // Transfer the ownership of the ticket to the buyer
     safeTransferFrom(ownerOf(ticketId), msg.sender, ticketId);
