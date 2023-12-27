@@ -69,9 +69,9 @@ export function hasHttpsCaseInsensitive(str: string) {
 
 export const networks: Network[] = [
   {
-    name: "Avalanche",
-    rpcUrl: "https://api.avax.network/ext/bc/C/rpc",
-    chainId: "0xa86a",
+    name: "Viction-testnet",
+    rpcUrl: "https://rpc-testnet.viction.xyz",
+    chainId: "88",
     symbol: "AVAX",
     explorer: "https://cchain.explorer.avax.network/",
     image: "https://cryptologos.cc/logos/avalanche-avax-logo.png",

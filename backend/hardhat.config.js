@@ -17,24 +17,19 @@ module.exports = {
           },
         },
       },
-    defaultNetwork: "calibrationnet",
+    defaultNetwork: "tomo-testnet",
     networks: {
-        localnet: {
-            chainId: 31415926,
-            url: "http://127.0.0.1:1234/rpc/v1",
-            accounts: [PRIVATE_KEY],
+        // for mainnet
+        'tomo-mainnet': {
+          url: 'https://rpc.viction.xyz',
+          accounts: [process.env.PRIVATE_KEY],
         },
-        calibrationnet: {
-            chainId: 314159,
-            url: "https://api.calibration.node.glif.io/rpc/v1",
-            accounts: [PRIVATE_KEY],
+        // for testnet
+        'tomo-testnet': {
+          url: 'https://rpc-testnet.viction.xyz',
+          accounts: [process.env.PRIVATE_KEY],
         },
-        filecoinmainnet: {
-            chainId: 314,
-            url: "https://api.node.glif.io",
-            accounts: [PRIVATE_KEY],
-        },
-    },
+      },
     paths: {
         sources: "./contracts",
         tests: "./test",

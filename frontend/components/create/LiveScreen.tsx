@@ -25,7 +25,7 @@ type Props = {
   activeUrl: string | undefined;
 };
 
-const CameraPage = ({ setActiveUrl, activeUrl }: Props) => {
+const LiveScreen = ({ setActiveUrl, activeUrl }: Props) => {
   const [type, setType] = useState(CameraType.front);
   const [permission, requestPermission] = Camera.useCameraPermissions();
   const [flashMode, setFlashMode] = useState<number | FlashMode>(FlashMode.on);
@@ -178,44 +178,30 @@ const CameraPage = ({ setActiveUrl, activeUrl }: Props) => {
   }
   return (
     <Camera ref={cameraRef} className="flex-1 min-h-screen" type={type}>
-      <SafeAreaView className="flex-row px-4 items-center justify-between w-full">
+      <SafeAreaView className="flex-row  px-4 items-center justify-between w-full">
         <FontAwesome5
           // onPress={recordVideo}
           name="times"
           size={24}
           color={"#fff"}
         />
-
         <TouchableOpacity className="px-9 py-2.5 rounded-lg">
-          <Text className="text-[14px] text-[#fff] font-opensans-bold">
-            Next
-          </Text>
+          <FontAwesome5 name="cog" size={20} color="#fff" />
         </TouchableOpacity>
       </SafeAreaView>
       <View className="flex-1 justify-end mb-9">
-        <TouchableOpacity className="flex-row justify-start items-center space-x-[150px]">
-          <Pressable className="">
-            <FontAwesome5
-              onPress={pickVideo}
-              name="image"
-              size={24}
-              color={"#fff"}
-            />
-          </Pressable>
-
-          <FontAwesome5
-            onPress={recordVideo}
-            name="dot-circle"
-            size={54}
-            color={isRecording ? "red" : "#fff"}
-          />
+        <TouchableOpacity className="flex-row justify-center bg-red-700 w-[90%] py-[9px] space-x-4 rounded-lg mx-auto items-center">
+          <FontAwesome5 name="video" size={20} color="#fff" />
+          <Text className="text-[16px] font-opensans-bold text-[#ffff]">
+            Start Live
+          </Text>
         </TouchableOpacity>
       </View>
     </Camera>
   );
 };
 
-export default CameraPage;
+export default LiveScreen;
 
 const styles = StyleSheet.create({
   container: {
