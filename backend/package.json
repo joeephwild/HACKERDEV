@@ -15,6 +15,7 @@
   "license": "MIT",
   "devDependencies": {},
   "dependencies": {
+    "@chainlink/contracts": "^0.8.0",
     "@glif/filecoin-address": "^2.0.43",
     "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
     "@nomicfoundation/hardhat-ethers": "^3.0.5",
