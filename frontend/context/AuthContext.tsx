@@ -144,6 +144,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     try {
       setAction("Signing User....");
       // Create a new user with email and password
+      router.push("/(tabs)");
+
       userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -242,8 +244,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
       setSoundObject(null); // Clear the sound object
     }
   }
-
-
 
   const signin = async (email: string, password: string) => {
     try {

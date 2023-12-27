@@ -4,28 +4,34 @@ import {
   filMediaMarketplaceAddress,
   dynamicNftAddress,
   artistNFTAddress,
+  userNFTAddress,
 } from "./addresses";
 import filMediaMarketplaceAbi from "./abis/FilMediaMarketplace.json";
 import dynamicNftAbi from "./abis/FilMediaDynamicNFTAbi.json";
 import artistNFTAbi from "./abis/FilMediaArtistNFTAbi.json";
+import UserNFTAbi from "./abis/UserNFTAbi.json";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
-import { getAccountPhrase } from "@rly-network/mobile-sdk";
+import { getAccountPhrase, getAccount } from "@rly-network/mobile-sdk";
 
 let filMediaMarketplaceContract: any,
   dynamicNftContract: any,
   artistNFTContract: any,
+  userNFTContract: any,
   signer: any;
 
 const connect = async () => {
   try {
-    const provider = new ethers.JsonRpcProvider(PROVIDER);
-    const phrase = await getAccountPhrase();
-    if (phrase === null || phrase === undefined) {
+    const phrase: undefined | null | string = await getAccountPhrase();
+
+    if (phrase == null || phrase == undefined) {
       throw new Error("Failed to get account phrase");
     }
+
+    const provider = new ethers.providers.JsonRpcProvider(PROVIDER);
+
     const mnemonic: string = phrase;
-    const wallet = ethers.Wallet.fromPhrase(mnemonic);
+    const wallet = ethers.Wallet.fromMnemonic(mnemonic);
 
     signer = new ethers.Wallet(wallet.privateKey, provider);
 
@@ -39,6 +45,8 @@ const connect = async () => {
       dynamicNftAbi,
       signer
     );
+    userNFTContract = new ethers.Contract(userNFTAddress, UserNFTAbi, signer);
+
     artistNFTContract = new ethers.Contract(
       artistNFTAddress,
       artistNFTAbi,
@@ -78,6 +86,26 @@ export const _listNFT = async ({
   }
 };
 
+export const _createUser = async (): Promise<boolean> => {
+  try {
+    const walletAddress: any = await _getWalletAddress();
+    await userNFTContract.mint(walletAddress);
+    const userTokenId: any = await userNFTContract.getCurrentTokenId();
+
+    const tx = await filMediaMarketplaceContract.createUser(
+      userNFTAddress,
+      userTokenId
+    );
+    await tx.wait();
+    console.log("Transaction successful:", tx.hash);
+    AsyncStorage.setItem("tokenId", userTokenId);
+    return true;
+  } catch (error) {
+    console.error("Error creating user NFT:", error);
+    return false;
+  }
+};
+
 // Function to interact with the "addNFTForArtist" Solidity function
 export const _addNFTForArtist = async ({
   _artistAddr,
@@ -99,26 +127,26 @@ export const _addNFTForArtist = async ({
 };
 
 // Function to interact with the "deposit" Solidity function
-export const _deposit = async ({
-  value,
-}: {
-  value: string;
-}): Promise<boolean> => {
-  try {
-    const valueToSend = ethers.parseEther(value); // Replace '1' with the desired amount in ETH
-    console.log("depositing.........");
-    const tx = await filMediaMarketplaceContract.deposit({
-      value: valueToSend,
-    });
+// export const _deposit = async ({
+//   value,
+// }: {
+//   value: string;
+// }): Promise<boolean> => {
+//   try {
+//     const valueToSend = ethers.parseEther(value); // Replace '1' with the desired amount in ETH
+//     console.log("depositing.........");
+//     const tx = await filMediaMarketplaceContract.deposit({
+//       value: valueToSend,
+//     });
 
-    console.log("Transaction successful:", tx.hash);
-    await tx.wait();
-    return true;
-  } catch (error) {
-    console.error("Error depositing ETH:", error);
-    return false;
-  }
-};
+//     console.log("Transaction successful:", tx.hash);
+//     await tx.wait();
+//     return true;
+//   } catch (error) {
+//     console.error("Error depositing ETH:", error);
+//     return false;
+//   }
+// };
 
 // Function to interact with the "subcribeToArtist" Solidity function
 export const _subcribeToArtist = async ({
@@ -363,6 +391,16 @@ export const _getUserBalance = async ({
   }
 };
 
+// export const _checkifWalletisActivate = async ({}): Promise<any> => {
+//   try {
+//     const uri = await filMediaMarketplaceContract.getTokenUri(tokenId);
+
+//     console.log("Token URI:", uri);
+//   } catch (error) {
+//     console.error("Error checking if is an activated account:", error);
+//   }
+// };
+
 ///////////////// DYNAMIC NFT CONTRACT  //////////////////////////////
 // Function to interact with the "safeMint" Solidity function
 export const _safeMint = async ({
@@ -460,18 +498,37 @@ export const _getTokenIdArtist = async (): Promise<any> => {
 /////////// OTHER FUNCTIONS////////////////
 export const _getWalletAddress = async (): Promise<string> => {
   try {
-    const user: any = await AsyncStorage.getItem("user");
+    const walletAddress: undefined | string = await getAccount();
 
-    let walletAddress: string;
-
-    if (user) {
-      const parseUser = JSON.parse(user);
-      walletAddress = parseUser.walletAddress;
+    console.log(walletAddress);
+    if (walletAddress != undefined) {
+      return walletAddress;
     } else {
       Alert.alert("User Not found");
-      walletAddress = "0x0000000000000000000000000000";
+      return "0x0000000000000000000000000000";
     }
-    return walletAddress;
+  } catch (error) {
+    console.log(error);
+    Alert.alert("User");
+
+    return "Something went wrong";
+  }
+};
+
+export const _getWalletBalance = async (): Promise<any> => {
+  try {
+    const walletAddress: any = await _getWalletAddress();
+    const provider: undefined | any = new ethers.providers.JsonRpcProvider(
+      PROVIDER
+    );
+    const walletBalance = await provider.getBalance(walletAddress);
+
+    if (walletBalance != undefined) {
+      return walletBalance;
+    } else {
+      Alert.alert("Balance Not found");
+      return "0";
+    }
   } catch (error) {
     console.log(error);
     Alert.alert("User");
