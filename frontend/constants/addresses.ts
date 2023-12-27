@@ -1,7 +1,6 @@
 import { ApolloClient, InMemoryCache } from "@apollo/client";
 
-export const PROVIDER =
-  "https://eth-sepolia.g.alchemy.com/v2/ZkFgCAUBdigtKoqowEjqdlyfjchhbvmg";
+export const PROVIDER = "https://rpc-testnet.viction.xyz";
 export const artistNFTAddress = "0x162119d2237C60926D55DC1bA997025233CF7823";
 export const filMediaMarketplaceAddress =
   "0x8AcB75D06955Df7DF91BDf3113a7062F6e83324a";
