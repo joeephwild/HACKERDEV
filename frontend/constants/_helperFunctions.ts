@@ -92,7 +92,6 @@ export const _createUser = async (): Promise<boolean> => {
     await userNFTContract.mint(walletAddress);
     const userTokenId: any = await userNFTContract.getCurrentTokenId();
 
-    console.log(userTokenId.toString());
     const tx = await filMediaMarketplaceContract.createUser(
       userNFTAddress,
       userTokenId
